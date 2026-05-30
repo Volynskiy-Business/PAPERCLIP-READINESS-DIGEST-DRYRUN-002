@@ -14,6 +14,22 @@ assert_eq() {
   fi
 }
 
+wait_for_route() {
+  local url="$1"
+  local code=""
+  local attempts=0
+  while ((attempts < 20)); do
+    code="$(curl -sS -o /tmp/readiness-digest-check.json -w '%{http_code}' "$url" || true)"
+    if [[ "$code" != "000" ]]; then
+      return 0
+    fi
+    attempts=$((attempts + 1))
+    sleep 0.5
+  done
+  printf 'assertion failed: route did not become reachable (%s)\n' "$url" >&2
+  exit 1
+}
+
 backend_pid=""
 static_pid=""
 cleanup() {
@@ -33,7 +49,7 @@ python3 -m unittest tests/test_readiness_digest.py
 READINESS_DIGEST_TOKEN=paperclip-internal-operator-token \
   python3 -m backend.readiness_digest_server > /tmp/readiness-digest-backend.log 2>&1 &
 backend_pid=$!
-sleep 1
+wait_for_route "http://127.0.0.1:4180/api/v1/ops/readiness-digest"
 
 unauthorized_code="$(curl -sS -o /tmp/readiness-digest-401.json -w '%{http_code}' \
   http://127.0.0.1:4180/api/v1/ops/readiness-digest)"
@@ -48,22 +64,12 @@ python3 - <<'PY'
 import json
 from pathlib import Path
 
+expected = json.loads(Path("docs/second-slice-readiness-digest-sample-response.json").read_text())
 body = json.loads(Path("/tmp/readiness-digest-200.json").read_text())
-assert body["sliceId"] == "SECOND-SLICE-RD-001"
-assert body["summary"] == {
-    "completedWorkstreams": 2,
-    "blockedWorkstreams": 1,
-    "inProgressWorkstreams": 3,
-}
-assert body["warnings"] == [
-    {
-        "code": "DEGRADED_SOURCE_AUTHZ",
-        "message": "Security re-review remains blocked pending operator-auth remediation and removal of the published route-like digest fixture.",
-    }
-]
+assert body == expected
 assert any(
     link["path"] == "docs/second-slice-staging-rollback-evidence.md"
-    for link in body["evidenceLinks"]
+    for link in expected["evidenceLinks"]
 )
 print(body["overallVerdict"])
 PY
