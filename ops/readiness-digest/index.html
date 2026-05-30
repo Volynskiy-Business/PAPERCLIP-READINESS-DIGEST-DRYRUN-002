@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="readiness-digest-token" content="" />
+    <title>Second Slice Readiness Digest</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero">
+        <p class="eyebrow">Authenticated Operator UI Prototype</p>
+        <div class="hero-row">
+          <div>
+            <h1>Second Slice Readiness Digest</h1>
+            <p class="hero-copy">
+              Internal, bounded visibility for the delegated second-slice release
+              verdict. This prototype renders the operator contract from
+              `VOL-136`, fetches only the protected digest API, and does not
+              expose a route-like static digest fixture alongside the operator
+              surface.
+            </p>
+          </div>
+          <div class="meta-card">
+            <p class="meta-label">Slice</p>
+            <p id="slice-id" class="meta-value">Loading…</p>
+            <p class="meta-label">Generated</p>
+            <p id="generated-at" class="meta-value">Loading…</p>
+            <p class="meta-label">Access</p>
+            <p id="auth-status" class="meta-value auth-status" data-state="checking">Checking…</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="warning-banner" class="warning-banner" role="alert" aria-live="polite" hidden></section>
+
+      <section class="grid-layout">
+        <article class="panel verdict-panel">
+          <div class="panel-header">
+            <h2>Overall Verdict</h2>
+            <span id="verdict-pill" class="status-pill neutral">Loading…</span>
+          </div>
+          <p id="summary-copy" class="summary-copy">Loading digest summary…</p>
+          <dl class="summary-metrics">
+            <div>
+              <dt>Completed</dt>
+              <dd id="completed-count">0</dd>
+            </div>
+            <div>
+              <dt>Blocked</dt>
+              <dd id="blocked-count">0</dd>
+            </div>
+            <div>
+              <dt>In progress</dt>
+              <dd id="in-progress-count">0</dd>
+            </div>
+          </dl>
+        </article>
+
+        <article class="panel blockers-panel">
+          <div class="panel-header">
+            <h2>Blockers</h2>
+            <span id="blocker-count" class="count-chip">0</span>
+          </div>
+          <ul id="blocker-list" class="blocker-list"></ul>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Workstreams</h2>
+          <p class="panel-note">Source issue state is rendered directly without UI-only reinterpretation.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Workstream</th>
+                <th scope="col">Issue</th>
+                <th scope="col">Status</th>
+                <th scope="col">Blockers</th>
+                <th scope="col">Required Evidence</th>
+              </tr>
+            </thead>
+            <tbody id="workstream-rows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Evidence Links</h2>
+          <p class="panel-note">Artifacts already permitted to internal operators.</p>
+        </div>
+        <ul id="evidence-list" class="evidence-list"></ul>
+      </section>
+    </main>
+
+    <template id="empty-state-template">
+      <li class="empty-state">No items available.</li>
+    </template>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

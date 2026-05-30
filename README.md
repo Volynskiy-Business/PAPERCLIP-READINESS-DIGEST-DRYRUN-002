@@ -1,22 +1,48 @@
-# PAPERCLIP-READINESS-DIGEST-DRYRUN-002
+# Second Slice Readiness Digest Dry-Run Repo
 
-Second-slice executable repository for Paperclip portfolio-readiness proof.
+This repository is the bounded dry-run export for the second-slice readiness digest prototype. It contains only the operator UI, authenticated backend route, focused tests, and evidence artifacts needed to prove the slice in CI without claiming broader product readiness.
 
-Mission:
+## Repository scope
 
-- implement an internal readiness digest API and operator UI;
-- prove the work can be delivered by delegated AI delivery roles;
-- provide CI, staging, rollback, QA, security, and audit evidence.
+- `backend/`: authenticated readiness digest API handler and digest assembly logic
+- `ops/readiness-digest/`: static operator-facing review page
+- `tests/`: focused contract and runtime checks for the bounded slice
+- `docs/`: evidence pack, API contract, staging proof, and residual-risk notes
+- `.github/workflows/readiness-digest-ci.yml`: GitHub Actions verification workflow
 
-This repository is intentionally separate from `PAPERCLIP-PROD-DRYRUN-001` so the portfolio gate can test repeatability on a materially different slice.
+## Local verification
 
-## Assigned Live Issues
+Run the same bounded smoke used by CI:
 
-- Architecture: `VOL-136`
-- Backend: `VOL-137`
-- Frontend: `VOL-138`
-- QA: `VOL-139`
-- DevOps: `VOL-140`
-- Security: `VOL-141`
-- Technical audit: `VOL-142`
+```bash
+./ops/ci/smoke_readiness_digest.sh
+```
 
+The script proves:
+
+- focused Python tests pass
+- the digest API returns `401` without a token
+- the digest API returns `200` with the bounded operator token
+- the static operator page is reachable
+- the removed route-like static digest fixture still returns `404`
+
+## Manual review targets
+
+Serve the backend:
+
+```bash
+READINESS_DIGEST_TOKEN=paperclip-internal-operator-token python3 -m backend.readiness_digest_server
+```
+
+Serve the static operator page in another shell:
+
+```bash
+python3 -m http.server 4173
+```
+
+Review URLs:
+
+- API: `http://127.0.0.1:4180/api/v1/ops/readiness-digest`
+- UI: `http://127.0.0.1:4173/ops/readiness-digest/`
+
+This repo remains intentionally issue-bounded. It is evidence for dry-run repeatability and CI portability only.

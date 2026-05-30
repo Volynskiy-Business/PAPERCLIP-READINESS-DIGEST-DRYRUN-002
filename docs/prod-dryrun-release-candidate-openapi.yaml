@@ -1,0 +1,279 @@
+openapi: 3.1.0
+info:
+  title: Recruiting Tracker Dry-Run API
+  version: 0.1.0-dryrun-rc1
+  description: >
+    Contract-only release candidate for the supervised dry-run slice defined in VOL-124.
+servers:
+  - url: https://staging.example.internal
+    description: Placeholder staging-equivalent host for dry-run review only
+tags:
+  - name: RecruitingProspects
+paths:
+  /api/v1/recruiting/prospects:
+    get:
+      tags: [RecruitingProspects]
+      summary: List recruiting prospects
+      security:
+        - internalOperatorAuth: []
+      responses:
+        "200":
+          description: Prospect list for an authenticated internal operator
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Prospect"
+              examples:
+                default:
+                  value:
+                    items:
+                      - id: 8c194460-c572-4702-b040-4b9aba3c3234
+                        fullName: Alex Example
+                        fitRationale: Strong backend and systems judgment for founding engineer scope.
+                        relationshipSource: Warm intro from operator network
+                        contactPath: Email intro
+                        intendedMotion: Founder intro call
+                        intendedSender: CEO
+                        status: contacted
+                        notes: Intro requested from shared contact.
+                        linkedinUrl: https://linkedin.example/alex
+                        company: Example Systems
+                        createdAt: "2026-05-30T19:00:00Z"
+                        updatedAt: "2026-05-30T19:15:00Z"
+                        createdBy: 4db6c03c-2676-40d7-8c8e-6039c8b136f8
+                        updatedBy: 4db6c03c-2676-40d7-8c8e-6039c8b136f8
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [RecruitingProspects]
+      summary: Create a recruiting prospect
+      security:
+        - internalOperatorAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProspectRequest"
+            examples:
+              createProspect:
+                value:
+                  fullName: Alex Example
+                  fitRationale: Strong backend and systems judgment for founding engineer scope.
+                  relationshipSource: Warm intro from operator network
+                  contactPath: Email intro
+                  intendedMotion: Founder intro call
+                  intendedSender: CEO
+                  status: new
+                  notes: Prior startup infrastructure lead.
+      responses:
+        "201":
+          description: Prospect created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Prospect"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /api/v1/recruiting/prospects/{prospectId}:
+    patch:
+      tags: [RecruitingProspects]
+      summary: Update prospect status and notes
+      security:
+        - internalOperatorAuth: []
+      parameters:
+        - name: prospectId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProspectRequest"
+            examples:
+              updateProspect:
+                value:
+                  status: contacted
+                  notes: Intro requested from shared contact.
+      responses:
+        "200":
+          description: Prospect updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Prospect"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: Prospect not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+components:
+  securitySchemes:
+    internalOperatorAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Internal operator token resolved through the auth adapter boundary from VOL-116 ADR-003
+  responses:
+    Unauthorized:
+      description: Missing or invalid auth
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+          examples:
+            default:
+              value:
+                error:
+                  code: unauthorized
+                  message: Authentication is required.
+                  requestId: 48f8b0f1-92db-45d6-af83-08d97669a820
+    ValidationError:
+      description: Request failed validation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+          examples:
+            missingField:
+              value:
+                error:
+                  code: validation_error
+                  message: fullName is required.
+                  requestId: 5f8f3054-476f-4c35-8af3-2a20d1be3745
+  schemas:
+    Prospect:
+      type: object
+      required:
+        - id
+        - fullName
+        - fitRationale
+        - relationshipSource
+        - contactPath
+        - intendedMotion
+        - intendedSender
+        - status
+        - createdAt
+        - updatedAt
+        - createdBy
+        - updatedBy
+      properties:
+        id:
+          type: string
+          format: uuid
+        fullName:
+          type: string
+        fitRationale:
+          type: string
+        relationshipSource:
+          type: string
+        contactPath:
+          type: string
+        intendedMotion:
+          type: string
+        intendedSender:
+          type: string
+        status:
+          $ref: "#/components/schemas/ProspectStatus"
+        notes:
+          type: string
+        linkedinUrl:
+          type: string
+          format: uri
+        company:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+          format: uuid
+        updatedBy:
+          type: string
+          format: uuid
+    CreateProspectRequest:
+      type: object
+      required:
+        - fullName
+        - fitRationale
+        - relationshipSource
+        - contactPath
+        - intendedMotion
+        - intendedSender
+        - status
+      properties:
+        fullName:
+          type: string
+        fitRationale:
+          type: string
+        relationshipSource:
+          type: string
+        contactPath:
+          type: string
+        intendedMotion:
+          type: string
+        intendedSender:
+          type: string
+        status:
+          $ref: "#/components/schemas/ProspectStatus"
+        notes:
+          type: string
+        linkedinUrl:
+          type: string
+          format: uri
+        company:
+          type: string
+      additionalProperties: false
+    UpdateProspectRequest:
+      type: object
+      properties:
+        status:
+          $ref: "#/components/schemas/ProspectStatus"
+        notes:
+          type: string
+      additionalProperties: false
+    ProspectStatus:
+      type: string
+      enum:
+        - new
+        - contacted
+        - intro_requested
+        - intro_sent
+        - meeting_scheduled
+        - passed
+        - declined
+    ErrorEnvelope:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message, requestId]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            requestId:
+              type: string
+              format: uuid
