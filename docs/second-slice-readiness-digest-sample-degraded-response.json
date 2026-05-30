@@ -7,22 +7,20 @@
   },
   "overallVerdict": "not_ready_for_gate_review",
   "summary": {
-    "completedWorkstreams": 1,
-    "blockedWorkstreams": 2,
+    "completedWorkstreams": 2,
+    "blockedWorkstreams": 0,
     "inProgressWorkstreams": 3
   },
   "workstreams": [
     {
       "key": "backend",
       "issue": "VOL-137",
-      "status": "blocked",
-      "blockers": [
-        "VOL-141"
-      ],
+      "status": "in_progress",
+      "blockers": [],
       "requiredEvidence": [
-        "executable artifact",
-        "focused tests",
-        "write-path logs or audit events"
+        "API handler and mapping logic",
+        "Focused backend test run",
+        "Sample response fixture"
       ]
     },
     {
@@ -31,31 +29,83 @@
       "status": "in_progress",
       "blockers": [],
       "requiredEvidence": [
-        "route implementation",
-        "responsive rendering evidence"
+        "Route artifact",
+        "Responsive layout verification",
+        "Browser-visible smoke check"
+      ]
+    },
+    {
+      "key": "qa",
+      "issue": "VOL-139",
+      "status": "done",
+      "blockers": [],
+      "requiredEvidence": [
+        "Happy-path regression pass",
+        "Degraded-state test"
+      ]
+    },
+    {
+      "key": "staging",
+      "issue": "VOL-140",
+      "status": "done",
+      "blockers": [],
+      "requiredEvidence": [
+        "Focused CI command evidence",
+        "Reachable review target",
+        "Rollback rehearsal note"
+      ]
+    },
+    {
+      "key": "security",
+      "issue": "VOL-141",
+      "status": "in_review",
+      "blockers": [],
+      "requiredEvidence": [
+        "Auth and exposure review",
+        "Residual risk note"
+      ]
+    },
+    {
+      "key": "technical_audit",
+      "issue": "VOL-142",
+      "status": "in_progress",
+      "blockers": [],
+      "requiredEvidence": [
+        "Repeatability verdict",
+        "Comparison to first dry run"
       ]
     }
   ],
-  "blockers": [
-    {
-      "issue": "VOL-141",
-      "reason": "Security evidence not yet attached."
-    }
-  ],
+  "blockers": [],
   "evidenceLinks": [
     {
       "label": "Architecture contract",
       "path": "docs/second-slice-readiness-digest-architecture.md"
-    }
-  ],
-  "warnings": [
-    {
-      "code": "DEGRADED_SOURCE_DOCUMENTS",
-      "message": "One or more expected evidence documents could not be resolved."
     },
     {
-      "code": "MISSING_WORKSTREAM_EVIDENCE",
-      "message": "One or more required workstream artifacts are missing."
+      "label": "Portfolio synthesis",
+      "path": "docs/portfolio-autonomy-readiness-evidence-synthesis.md"
+    },
+    {
+      "label": "Frontend UI evidence",
+      "path": "docs/second-slice-frontend-ui-evidence.md"
+    },
+    {
+      "label": "Backend API contract",
+      "path": "docs/second-slice-readiness-digest-openapi.yaml"
+    },
+    {
+      "label": "Backend implementation evidence",
+      "path": "docs/second-slice-readiness-digest-backend-evidence.md"
+    },
+    {
+      "label": "QA regression evidence",
+      "path": "docs/second-slice-qa-regression-evidence.md"
+    },
+    {
+      "label": "Staging and rollback evidence",
+      "path": "docs/second-slice-staging-rollback-evidence.md"
     }
-  ]
+  ],
+  "warnings": []
 }
