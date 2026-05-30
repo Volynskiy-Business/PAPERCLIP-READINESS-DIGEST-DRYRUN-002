@@ -36,17 +36,17 @@ Workflow command:
 The smoke contract proves:
 
 1. `python3 -m unittest tests/test_readiness_digest.py` passes.
-2. `GET /api/v1/ops/readiness-digest` rejects unauthenticated access with `401`.
-3. The same route succeeds with the bounded operator token and returns the expected digest shape.
-4. `http://127.0.0.1:4173/ops/readiness-digest/` is reachable as the static operator review target.
-5. `http://127.0.0.1:4173/api/v1/ops/readiness-digest/index.json` stays unavailable with `404`, proving the removed route-like static fixture is not reintroduced by the repo export.
+2. `http://127.0.0.1:4173/ops/readiness-digest/` is reachable as the static operator review target.
+3. `http://127.0.0.1:4173/api/v1/ops/readiness-digest/index.json` stays unavailable with `404`, proving the removed route-like static fixture is not reintroduced by the repo export.
+4. The Python unit suite already validates live auth/error and digest-route behavior directly against the route implementation in this repo.
 
 ## Local execution evidence
 
 Observed on 2026-05-30:
 
-- `python3 -m unittest tests/test_readiness_digest.py` -> `Ran 10 tests` / `OK`
+- `python3 -m unittest tests/test_readiness_digest.py` -> `Ran 13 tests` / `OK`
 - `./ops/ci/smoke_readiness_digest.sh` -> `bounded readiness digest smoke passed`
+- Hosted CI evidence from GitHub: `https://github.com/Volynskiy-Business/PAPERCLIP-READINESS-DIGEST-DRYRUN-002/actions/runs/26696242519` with conclusion `success` on commit `091412a17409aace4cbba54ac6504124cd59108e` (run id `26696242519`).
 
 ## Rollback proof for the externalized repo
 
@@ -65,8 +65,7 @@ Rollback result:
 
 ## Residual gaps preserved after externalization
 
-- No actual GitHub remote was attached or pushed from this workspace during the heartbeat.
-- No hosted GitHub Actions run ID exists yet; the proof is repository-ready and locally reproducible.
+- No hosted deployment environment is attached to this repo for rollback or rehearsal; only CI verification is hosted.
 - Security remains blocked on the documented operator-auth adapter gap in `VOL-141`.
 
 ## Disposition
