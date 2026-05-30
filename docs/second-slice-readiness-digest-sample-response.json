@@ -1,0 +1,124 @@
+{
+  "sliceId": "SECOND-SLICE-RD-001",
+  "generatedAt": "2026-05-30T22:15:00Z",
+  "scope": {
+    "programIssue": "VOL-132",
+    "architectureIssue": "VOL-136"
+  },
+  "overallVerdict": "not_ready_for_gate_review",
+  "summary": {
+    "completedWorkstreams": 2,
+    "blockedWorkstreams": 1,
+    "inProgressWorkstreams": 3
+  },
+  "workstreams": [
+    {
+      "key": "backend",
+      "issue": "VOL-137",
+      "status": "in_progress",
+      "blockers": [],
+      "requiredEvidence": [
+        "API handler and mapping logic",
+        "Focused backend test run",
+        "Sample response fixture"
+      ]
+    },
+    {
+      "key": "frontend",
+      "issue": "VOL-138",
+      "status": "in_progress",
+      "blockers": [],
+      "requiredEvidence": [
+        "Route artifact",
+        "Responsive layout verification",
+        "Browser-visible smoke check"
+      ]
+    },
+    {
+      "key": "qa",
+      "issue": "VOL-139",
+      "status": "done",
+      "blockers": [],
+      "requiredEvidence": [
+        "Happy-path regression pass",
+        "Degraded-state test"
+      ]
+    },
+    {
+      "key": "staging",
+      "issue": "VOL-140",
+      "status": "done",
+      "blockers": [],
+      "requiredEvidence": [
+        "Focused CI command evidence",
+        "Reachable review target",
+        "Rollback rehearsal note"
+      ]
+    },
+    {
+      "key": "security",
+      "issue": "VOL-141",
+      "status": "blocked",
+      "blockers": [
+        "Operator auth still relies on a shared bearer token instead of the documented internal auth adapter.",
+        "The digest fixture is still published under a route-like static path outside the backend auth boundary."
+      ],
+      "requiredEvidence": [
+        "Auth and exposure review",
+        "Residual risk note"
+      ]
+    },
+    {
+      "key": "technical_audit",
+      "issue": "VOL-142",
+      "status": "in_progress",
+      "blockers": [],
+      "requiredEvidence": [
+        "Repeatability verdict",
+        "Comparison to first dry run"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "issue": "VOL-141",
+      "reason": "Operator auth still relies on a shared bearer token instead of the documented internal auth adapter.; The digest fixture is still published under a route-like static path outside the backend auth boundary."
+    }
+  ],
+  "evidenceLinks": [
+    {
+      "label": "Architecture contract",
+      "path": "docs/second-slice-readiness-digest-architecture.md"
+    },
+    {
+      "label": "Portfolio synthesis",
+      "path": "docs/portfolio-autonomy-readiness-evidence-synthesis.md"
+    },
+    {
+      "label": "Frontend UI evidence",
+      "path": "docs/second-slice-frontend-ui-evidence.md"
+    },
+    {
+      "label": "Backend API contract",
+      "path": "docs/second-slice-readiness-digest-openapi.yaml"
+    },
+    {
+      "label": "Backend implementation evidence",
+      "path": "docs/second-slice-readiness-digest-backend-evidence.md"
+    },
+    {
+      "label": "QA regression evidence",
+      "path": "docs/second-slice-qa-regression-evidence.md"
+    },
+    {
+      "label": "Staging and rollback evidence",
+      "path": "docs/second-slice-staging-rollback-evidence.md"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "DEGRADED_SOURCE_AUTHZ",
+      "message": "Security re-review remains blocked pending operator-auth remediation and removal of the published route-like digest fixture."
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "sliceId": "SECOND-SLICE-RD-001",
+  "generatedAt": "2026-05-30T21:35:00Z",
+  "scope": {
+    "programIssue": "VOL-132",
+    "architectureIssue": "VOL-136"
+  },
+  "overallVerdict": "not_ready_for_gate_review",
+  "summary": {
+    "completedWorkstreams": 1,
+    "blockedWorkstreams": 2,
+    "inProgressWorkstreams": 3
+  },
+  "workstreams": [
+    {
+      "key": "backend",
+      "issue": "VOL-137",
+      "status": "blocked",
+      "blockers": [
+        "VOL-141"
+      ],
+      "requiredEvidence": [
+        "executable artifact",
+        "focused tests",
+        "write-path logs or audit events"
+      ]
+    },
+    {
+      "key": "frontend",
+      "issue": "VOL-138",
+      "status": "in_progress",
+      "blockers": [],
+      "requiredEvidence": [
+        "route implementation",
+        "responsive rendering evidence"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "issue": "VOL-141",
+      "reason": "Security evidence not yet attached."
+    }
+  ],
+  "evidenceLinks": [
+    {
+      "label": "Architecture contract",
+      "path": "docs/second-slice-readiness-digest-architecture.md"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "DEGRADED_SOURCE_DOCUMENTS",
+      "message": "One or more expected evidence documents could not be resolved."
+    },
+    {
+      "code": "MISSING_WORKSTREAM_EVIDENCE",
+      "message": "One or more required workstream artifacts are missing."
+    }
+  ]
+}
